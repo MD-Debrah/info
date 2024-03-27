@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email & Password Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        button {
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Email & Password Manager</h1>
+    
+    <form id="emailPasswordForm">
+        <label for="email">Email:</label>
+        <input type="text" id="email" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" required>
+        <button type="submit">Save</button>
+    </form>
+
+    <h2>Saved Emails & Passwords</h2>
+    <ul id="savedCredentials"></ul>
+
+    <script>
+        const form = document.getElementById('emailPasswordForm');
+        const savedCredentialsList = document.getElementById('savedCredentials');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if(email && password) {
+                const credentials = { email, password };
+                saveCredentials(credentials);
+                displayCredentials();
+                form.reset();
+            }
+        });
+
+        function saveCredentials(credentials) {
+            let storedCredentials = JSON.parse(localStorage.getItem('credentials')) || [];
+            storedCredentials.push(credentials);
+            localStorage.setItem('credentials', JSON.stringify(storedCredentials));
+        }
+
+        function displayCredentials() {
+            savedCredentialsList.innerHTML = '';
+            const storedCredentials = JSON.parse(localStorage.getItem('credentials')) || [];
+            storedCredentials.forEach(function(credentials) {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Email: ${credentials.email}, Password: ${credentials.password}`;
+                savedCredentialsList.appendChild(listItem);
+            });
+        }
+
+        // Display existing credentials on page load
+        displayCredentials();
+    </script>
+</body>
+</html>
